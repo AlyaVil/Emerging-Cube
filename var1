@@ -1,0 +1,49 @@
+let _aryInitRot = [];
+let _myObject;
+
+function setup() {
+  let canvasSize;
+  if (windowWidth <= windowHeight) {
+    canvasSize = windowWidth;
+  } else {
+    canvasSize = windowHeight;
+  }
+  createCanvas(canvasSize, canvasSize, WEBGL);
+  document.getElementsByTagName('main')[0].style.margin = 0;
+  setAttributes('premultipliedAlpha', true);
+  frameRate(30);
+  noStroke();
+  for (let i = 0; i < 3; i++) {
+    _aryInitRot[i] = [random(2*PI), random([-1, 1])];
+  }
+
+  _myObject = new Parts(350);
+}
+
+function draw() {
+  ortho(-width/2, width/2, -width/2, width/2, 0, width*2);
+  background(200);
+  ambientLight(60);
+  let ang = _aryInitRot[1][0] + frameCount/100;
+  directionalLight(255, 255, 255, -sin(ang), 1, -cos(ang));
+  let c = (height/2) / tan(PI/6);
+  camera(c*sin(ang), 0, c*cos(ang), 0, 0, 0, 0, 1, 0);
+  rotateZ(PI/4);
+
+  _myObject.update();
+}
+
+function drawPart(startX, startY, startZ, endX, endY, endZ, w, col) {
+  let angAxisZ = atan2(endY - startY, endX - startX);
+  let distXY = dist(startX, startY, endX, endY);
+  let angAxisY = -atan2(endZ - startZ, distXY);
+  let distXYZ = dist(0, startZ, distXY, endZ);
+  push();
+  translate(startX, startY, startZ);
+  rotateZ(angAxisZ);
+  rotateY(angAxisY);
+  translate(distXYZ/2, 0, 0);
+  ambientMaterial(col);
+  box(distXYZ + w, w, w); //length + w
+  pop();
+}
