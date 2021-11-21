@@ -1,0 +1,54 @@
+class Parts {
+  constructor(numPart) {
+    this.maxArea = width/3.4;
+    this.maxW = width/10;
+    this.t = 3;
+    this.maxL = this.maxArea;
+    this.parts = [];
+    let w = max(width/300, this.maxW * random() **12);
+    let startX = -this.maxArea/2;
+    let startY = -this.maxArea/2;
+    let startZ = -this.maxArea/2;
+    let aryEndXYZ = this.randomDirection(startX, startY, startZ);
+    while (abs(aryEndXYZ[0]) > this.maxArea || abs(aryEndXYZ[1]) > this.maxArea || abs(aryEndXYZ[2]) > this.maxArea) {
+      aryEndXYZ = this.randomDirection(startX, startY, startZ);
+    }
+    let endX = aryEndXYZ[0];
+    let endY = aryEndXYZ[1];
+    let endZ = aryEndXYZ[2];
+    this.partCount = int(random(1000));
+    this.parts.push(new Part(startX, startY, startZ, endX, endY, endZ, w, this.t, this.partCount, this.maxW));
+    this.numPart = numPart;
+    this.isGenerate = false;
+  }
+  update() {
+    for (let i = 0; i < this.parts.length; i++) {
+      this.parts[i].update();
+    }
+    if (this.parts[this.parts.length-1].currentTime >= this.parts[this.parts.length-1].totalTime) {
+      this.isGenerate = true;
+    }
+
+    if (this.isGenerate == true && this.parts.length < this.numPart) {
+      let w = max(width/300, this.maxW * random() **12);
+      let startX = this.parts[this.parts.length-1].endX;
+      let startY = this.parts[this.parts.length-1].endY;
+      let startZ = this.parts[this.parts.length-1].endZ;
+      let aryEndXYZ = this.randomDirection(startX, startY, startZ);
+      while (abs(aryEndXYZ[0]) > this.maxArea || abs(aryEndXYZ[1]) > this.maxArea || abs(aryEndXYZ[2]) > this.maxArea) {
+        aryEndXYZ = this.randomDirection(startX, startY, startZ);
+      }
+      let endX = aryEndXYZ[0];
+      let endY = aryEndXYZ[1];
+      let endZ = aryEndXYZ[2];
+      this.partCount ++;
+      this.parts.push(new Part(startX, startY, startZ, endX, endY, endZ, w, this.t, this.partCount, this.maxW));
+      this.isGenerate = false;
+    }
+
+    if (this.parts.length >= this.numPart) {
+      this.parts[0].direction = false;
+    }
+
+    if (this.parts[0].erase == true) { this.parts.shift(); }
+  }
