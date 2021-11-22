@@ -52,3 +52,42 @@ class Parts {
 
     if (this.parts[0].erase == true) { this.parts.shift(); }
   }
+randomDirection(startX, startY, startZ) {
+    let endX = startX;
+    let endY = startY;
+    let endZ = startZ;
+    let direction = random(["-x", "x", "-y", "y", "-z", "z"]);
+    switch(direction) {
+      case "-x":
+        endX = startX + this.maxL * random(-1, 0);
+        break;
+      case "x":
+        endX = startX + this.maxL * random(0, 1);
+        break;
+      case "-y":
+        endY = startY + this.maxL * random(-1, 0);
+        break;
+      case "y":
+        endY = startY + this.maxL * random(0, 1);
+        break;
+      case "-z":
+        endZ = startZ + this.maxL * random(-1, 0);
+        break;
+      case "z":
+        endZ = startZ + this.maxL * random(0, 1);
+        break;
+    }
+    return [endX, endY, endZ];
+  }
+}
+
+function mouseReleased() {
+  screenReset();
+}
+
+function screenReset() {
+  for (let i = 0; i < 3; i++) {
+    _aryInitRot[i] = [random(2*PI), random([-1, 1])];
+  }
+  _myObject = new Parts(350);
+}
